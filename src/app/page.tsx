@@ -1,113 +1,120 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import Image, { StaticImageData } from "next/image";
+import humidity from "../assets/images/humidity.png";
+import windSpeed from "../assets/images/wind.png";
+import search from "../assets/images/search.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import axios, { AxiosResponse } from "axios";
+import config from "../config/config";
+import weatherClear from "../assets/images/clear.png";
+import weatherClouds from "../assets/images/clouds.png";
+import weatherDrizzle from "../assets/images/drizzle.png";
+import weatherMist from "../assets/images/mist.png";
+import weatherRain from "../assets/images/rain.png";
+import weatherSnow from "../assets/images/snow.png";
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+const weatherImg: { [key: string]: StaticImageData } = {
+	"Clear": weatherClear,
+	"Clouds": weatherClouds,
+	"Drizzle": weatherDrizzle,
+	"Mist": weatherMist,
+	"Rain": weatherRain,
+	"Snow": weatherSnow
+};
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+function Home(): React.JSX.Element {
+	const [searchQuery, setSearchQuery] = useState<string>("Thailand");
+	const [placeTemperature, setPlaceTemperature] = useState<string>("0");
+	const [placeName, setPlaceName] = useState<string>("Loading...");
+	const [placeWindSpeed, setPlaceWindSpeed] = useState<string>("0");
+	const [placeHumidity, setPlaceHumidity] = useState<string>("0");
+	const [placeWeather, setPlaceWeather] = useState<string>("Clear");
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+
+	useEffect(() =>{
+		(async() =>{
+			await fetchWeatherData();
+		})();
+	}, []);
+
+
+	async function fetchWeatherData(){
+		try {
+			const response: AxiosResponse<any, any> = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${searchQuery}&appid=${config.api.weatherApiKey}&units=metric`);
+			const responseData: any = response.data;
+			setPlaceWeather(responseData.weather[0]?.main ?? "");
+			setPlaceHumidity(responseData.main?.humidity ?? "");
+			setPlaceWindSpeed(responseData.wind?.speed ?? "");
+			setPlaceName(responseData.name ?? "");
+			setPlaceTemperature(responseData.main?.temp ?? "");
+		}
+		catch(e){
+			console.log(e);
+		}
+	}
+
+	function onSubmitSearch(){
+		(async() =>{
+			await fetchWeatherData();
+		})();
+	}
+
+	return (
+		<>
+			<div className="min-h-screen flex flex-col justify-center item-center">
+				<div className="flex flex-col gap-10 text-white mx-auto w-full max-w-sm bg-gradient-to-br from-[#02fbb9] to-[#5a588a] rounded-3xl p-8">
+					<div className="flex flex-row grow gap-3 justify-between items-center">
+						<input className="w-full rounded-full p-3 !px-5 text-black border-none" placeholder="Thailand" type="text" onChange={(event) => setSearchQuery(event.target.value)} />
+						<div className="bg-white p-3 rounded-full border-none cursor-pointer text-black hover:!text-[#02fbb9] duration-200" onClick={() => onSubmitSearch()}>
+							{/* <Image className="rounded-full w-5" src={search} alt="search" /> */}
+							<FontAwesomeIcon icon={faMagnifyingGlass} className=" w-6" />
+						</div>
+					</div>
+					{/* Degree */}
+					<div className="flex flex-col gap-1 grow justify-center text-center">
+						<Image className="w-40 h-40 mx-auto" src={weatherImg[placeWeather]} alt="weather" />
+						<div className="flex flex-row gap-1 mx-auto">
+							<div className="text-7xl font-light">
+								{placeTemperature}
+							</div>
+							<div className="text-4xl font-normal">
+								o
+							</div>
+							<div className="text-5xl font-medium self-end pb-2">
+								C
+							</div>
+						</div>
+						<div className="text-4xl">
+							{placeName}
+						</div>
+					</div>
+					{/* Info */}
+					<div className="grid grid-cols-2 grow">
+						<div className="flex flex-row gap-2 items-center">
+							<Image className="w-9 h-9" src={humidity} alt="humidity" />
+							<div className="flex flex-col">
+								<div className="text-2xl">{placeHumidity} %</div>
+								<div className="text-lg font-light">Humidity</div>
+							</div>
+						</div>
+						<div className="flex flex-row gap-2 items-center">
+							<Image className="w-9 h-9" src={windSpeed} alt="humidity" />
+							<div className="flex flex-col">
+								<div className="text-2xl">{placeWindSpeed} km/h</div>
+								<div className="text-lg font-light">Wind Speed</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</>
+	);
 }
+
+
+export default Home;
