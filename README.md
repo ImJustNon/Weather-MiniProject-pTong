@@ -20,7 +20,7 @@
 <br />
 
 <center>
-    <h1>😀 People Who Know & People Who Do not Know 🥵</h1>
+    <h1>😀 People Who Know & A Person Who Do not Know 🥵</h1>
 </center>
 
 <br />
